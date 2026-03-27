@@ -1,0 +1,3675 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão de Projetos - MDGEO</title>
+    <style>
+        /* RESET E CONFIGURAÇÕES GLOBAIS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* ESTILOS PARA A TELA DE LOGIN */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .login-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.pexels.com/photos/6983543/pexels-photo-6983543.jpeg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        .login-container {
+            width: 400px;
+            max-width: 90%;
+            padding: 40px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            margin: 0 auto;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-logo-img {
+            max-width: 200px;
+            max-height: 80px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
+        .login-logo-text {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #a8d8ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .login-form-group {
+            margin-bottom: 20px;
+        }
+
+        .login-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .login-form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .login-form-control:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .login-form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        /* ESTILOS PARA O HEADER COM LOGO */
+        .user-info {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .container {
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .header-title-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-logo {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .header-logo-placeholder {
+            height: 50px;
+            width: 50px;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .calendar-icon, .email-icon, .chat-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 10px;
+            color: white;
+            border-radius: 8px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-icon {
+            background: #3498db;
+        }
+
+        .email-icon {
+            background: #27ae60;
+        }
+
+        .chat-icon {
+            background: #9b59b6;
+        }
+
+        .calendar-icon:hover, .email-icon:hover, .chat-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .calendar-badge, .email-badge, .chat-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .header-title-container {
+                justify-content: center;
+            }
+            
+            .header-logo {
+                height: 40px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                width: 95%;
+                padding: 30px 20px;
+            }
+
+            .login-logo-text {
+                font-size: 28px;
+            }
+
+            .login-subtitle {
+                font-size: 14px;
+            }
+
+            .header-logo {
+                height: 35px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .header-title-container {
+                gap: 10px;
+            }
+
+            .calendar-icon, .email-icon, .chat-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .login-screen {
+                align-items: flex-start;
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+        }
+
+        .calendar-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        .email-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 10px;
+            background: #27ae60;
+            color: white;
+            border-radius: 8px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .email-icon:hover {
+            background: #219653;
+            transform: scale(1.05);
+        }
+
+        .email-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .calendar-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .calendar-modal.active {
+            display: block;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        .calendar-events {
+    min-height: 60px;
+}
+
+.calendar-event {
+    background-color: #3498db;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 10px;
+    margin-bottom: 2px;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.calendar-event:hover {
+    background-color: #2980b9;
+}
+
+.calendar-day:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .calendar-nav button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: #ecf0f1;
+            border: 1px solid #ecf0f1;
+            margin-bottom: 20px;
+        }
+
+        .calendar-day-header {
+            background-color: #34495e;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .calendar-day {
+            background-color: white;
+            min-height: 120px;
+            padding: 10px;
+            position: relative;
+        }
+
+        .calendar-day.other-month {
+            background-color: #f8f9fa;
+            color: #bdc3c7;
+        }
+
+        .calendar-day.today {
+            background-color: #e8f4fd;
+        }
+
+        .calendar-day-number {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .add-meeting-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .meeting-form {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2ecc71;
+        }
+
+        .meeting-form h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel {
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-save {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .meetings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .meeting-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+
+        .meeting-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .meeting-title {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .meeting-date {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .meeting-participants {
+            font-size: 14px;
+            color: #34495e;
+            margin-bottom: 8px;
+        }
+
+        .meeting-description {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .close-modal {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .tabs {
+            display: flex;
+            background-color: white;
+            border-radius: 8px;
+            padding: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 12px 30px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background-color: #ecf0f1;
+        }
+
+        .tab.hidden {
+            display: none;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 5px solid #3498db;
+        }
+
+        .dashboard-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .dashboard-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+
+        .dashboard-label {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .status-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .status-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .status-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .status-count {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        .search-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .search-item {
+            flex: 1;
+        }
+
+        .search-item label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .search-item select, .search-item input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn-buscar {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-upload {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .btn-pdf {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        .project-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .project-code {
+            font-weight: bold;
+            font-size: 18px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification-badge {
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .project-desc {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+
+        .project-details {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .detail-item {
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-weight: bold;
+        }
+
+        .status-concluido {
+            color: #2ecc71;
+        }
+
+        .status-andamento {
+            color: #f39c12;
+        }
+
+        .status-planejamento {
+            color: #3498db;
+        }
+
+        .status-pausado {
+            color: #e74c3c;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .progress-100 {
+            width: 100%;
+            background-color: #2ecc71;
+        }
+
+        .progress-65 {
+            width: 65%;
+            background-color: #f39c12;
+        }
+
+        .progress-15 {
+            width: 15%;
+            background-color: #3498db;
+        }
+
+        .progress-pausado {
+            width: 100%;
+            background-color: #e74c3c;
+            opacity: 0.5;
+        }
+
+        .paused-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .annotations-section {
+            margin-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            padding-top: 15px;
+        }
+
+        .annotations-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .annotations-header h4 {
+            color: #2c3e50;
+        }
+
+        .btn-add-note {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .annotation-form {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 3px solid #3498db;
+        }
+
+        .annotation-form textarea {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            margin-bottom: 10px;
+        }
+
+        .annotation-form-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .annotations-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .annotation-item {
+            background-color: white;
+            border-left: 3px solid #3498db;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .annotation-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .annotation-author {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .annotation-date {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .annotation-text {
+            color: #34495e;
+            line-height: 1.4;
+        }
+
+        .no-annotations {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .updates-section {
+            margin-top: 30px;
+        }
+
+        .updates-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .updates-header h2 {
+            color: #2c3e50;
+        }
+
+        .btn-add-update {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .updates-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .update-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+
+        .update-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .update-project {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .update-date {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .update-content {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .update-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .progress-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            min-width: 80px;
+        }
+
+        .progress-value {
+            font-weight: bold;
+            color: #2c3e50;
+            min-width: 40px;
+        }
+
+        .update-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #7f8c8d;
+            border-top: 1px solid #ecf0f1;
+            padding-top: 10px;
+        }
+
+        .update-author {
+            font-weight: bold;
+        }
+
+        .update-type {
+            background-color: #ecf0f1;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+
+        .update-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+            width: 90%;
+            max-width: 600px;
+            display: none;
+        }
+
+        .update-modal.active {
+            display: block;
+        }
+
+        .update-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-title {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .project-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .project-modal.active {
+            display: block;
+        }
+
+        .project-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .last-project {
+            background-color: #e8f4fd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+
+        .last-project h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .last-project-code {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .permission-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .restricted-section {
+            opacity: 0.7;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .restricted-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .restricted-message {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .new-project-btn {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px auto;
+            transition: all 0.3s ease;
+        }
+
+        .new-project-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        }
+
+        .timeline-section {
+            margin-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            padding-top: 15px;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .timeline-header h4 {
+            color: #2c3e50;
+        }
+
+        .btn-add-timeline {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .timeline-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .timeline-item {
+            background-color: white;
+            border-left: 3px solid #3498db;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .timeline-header-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .timeline-author {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .timeline-date {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .timeline-message {
+            color: #34495e;
+            line-height: 1.4;
+        }
+
+        .drop-project-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+}
+
+.drop-project-btn:hover {
+    background-color: #c0392b;
+    transform: scale(1.05);
+}
+
+        .email-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+            width: 95%;
+            max-width: 1200px;
+            height: 85vh;
+            display: none;
+            overflow: hidden;
+        }
+
+        .email-modal.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .email-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #ea4335, #d14836);
+            color: white;
+        }
+
+        .email-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+        }
+
+        .email-container {
+            flex: 1;
+            display: flex;
+            height: calc(100% - 60px);
+        }
+
+        .email-sidebar {
+            width: 200px;
+            background: #f6f8fc;
+            border-right: 1px solid #e0e0e0;
+            padding: 15px 0;
+        }
+
+        .email-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .email-toolbar {
+            padding: 10px 15px;
+            background: #f6f8fc;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .email-iframe {
+            flex: 1;
+            border: none;
+            background: white;
+        }
+
+        .email-placeholder {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f6f8fc;
+            color: #5f6368;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .email-placeholder-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #ea4335;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .sidebar-item:hover {
+            background: #e8eaed;
+        }
+
+        .sidebar-item.active {
+            background: #e8f0fe;
+            color: #1a73e8;
+            font-weight: bold;
+        }
+
+        .sidebar-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        .email-btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .email-btn:hover {
+            background: #0d62d9;
+        }
+
+        .email-btn-secondary {
+            background: transparent;
+            color: #5f6368;
+            border: 1px solid #dadce0;
+        }
+
+        .email-btn-secondary:hover {
+            background: #f8f9fa;
+        }
+
+        .compose-btn {
+            background: #c2e7ff;
+            color: #001d35;
+            font-weight: bold;
+            margin: 0 15px 15px;
+            padding: 12px;
+            border-radius: 16px;
+            justify-content: center;
+        }
+
+        .compose-btn:hover {
+            background: #b3e0ff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .project-details {
+                grid-template-columns: 1fr;
+            }
+
+            .search-row {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                font-size: 12px;
+            }
+
+            .calendar-day {
+                min-height: 80px;
+                padding: 5px;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .calendar-modal {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .update-modal {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .project-modal {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .header-icons {
+                gap: 5px;
+            }
+
+            .calendar-icon,
+            .email-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+
+            .email-modal {
+                width: 98%;
+                height: 90vh;
+            }
+
+            .email-sidebar {
+                width: 60px;
+            }
+
+            .sidebar-text {
+                display: none;
+            }
+
+            .compose-btn span {
+                display: none;
+            }
+
+            .compose-btn {
+                margin: 0 10px 15px;
+                padding: 12px 8px;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+   <body>
+    <!-- TELA DE LOGIN CORRIGIDA E SIMPLIFICADA -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-background"></div>
+        <div class="login-container">
+            <div class="login-logo">
+                <img src="logo.png" alt="MDGEO Logo" class="login-logo-img" onerror="this.style.display='none'; document.getElementById('loginLogoText').style.display='block';">
+                <div id="loginLogoText" class="login-logo-text" style="display: none;">MDGEO</div>
+            </div>
+
+            <div class="login-subtitle">Sistema de Gestão de Projetos</div>
+
+            <div class="login-form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" class="login-form-control" placeholder="seu@email.com" required>
+            </div>
+
+            <div class="login-form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" class="login-form-control" placeholder="Sua senha" required>
+            </div>
+
+            <button class="login-btn" onclick="login()">Entrar</button>
+
+            <!-- REMOVIDA COMPLETAMENTE A SEÇÃO DE CREDENCIAIS PARA TESTE -->
+
+            <div class="login-footer">
+                &copy; 2023 MDGEO - Todos os direitos reservados
+            </div>
+        </div>
+    </div>
+
+    <!-- SISTEMA ORIGINAL - MANTIDO EXATAMENTE COMO ESTAVA -->
+    <div id="mainApp" class="hidden">
+        <div class="user-info">
+            <div>Bem-vindo, <span id="userName">Usuário</span></div>
+            <div>
+                <span id="userRole">Cargo</span> |
+                <button class="logout-btn" onclick="logout()">Sair</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="header">
+                <!-- LOGO NO HEADER DO SISTEMA -->
+                <div class="header-title-container">
+                    <img src="logo.png" alt="MDGEO Logo" class="header-logo" onerror="this.style.display='none'">
+                    <h1>Sistema de Gestão - MDGEO</h1>
+                </div>
+                <div class="header-icons">
+                    <div class="calendar-icon" onclick="openCalendar()">
+                        📅
+                        <div id="calendarBadge" class="calendar-badge hidden"></div>
+                    </div>
+                    <div class="email-icon" onclick="openEmailModal()">
+                        ✉️
+                        <div id="emailBadge" class="email-badge hidden">1</div>
+                    </div>
+                    <div class="chat-icon" onclick="openChatModal()">
+                        💬
+                        <div id="chatBadge" class="chat-badge hidden">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AVISO DE PERMISSÃO -->
+            <div id="permissionWarning" class="permission-warning hidden">
+                <strong>Atenção:</strong> Você está acessando com permissões limitadas. Visualizando apenas seus próprios projetos.
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('dashboard')">Dashboard</div>
+                <div class="tab" onclick="showTab('gestao')">Gestão de Projetos</div>
+                <div class="tab" onclick="showTab('atualizacoes')">Atualizações</div>
+                <div class="tab" onclick="showTab('novo-projeto')" id="novoProjetoTab">+ Novo Projeto</div>
+            </div>
+
+            <div id="dashboard" class="tab-content active">
+                <!-- SEÇÃO RESTRITA DO DASHBOARD -->
+                <div id="dashboardRestricted" class="restricted-section hidden">
+                    <div class="restricted-overlay">
+                        <div class="restricted-message">
+                            <h3>Acesso Restrito</h3>
+                            <p>Esta área é exclusiva para administradores.</p>
+                            <p>Entre em contato com Maurício para mais informações.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>Total de Projetos</h3>
+                        <div class="dashboard-value" id="totalProjetos">0</div>
+                        <div class="dashboard-label">Projetos ativos no sistema</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Orçamento Total</h3>
+                        <div class="dashboard-value" id="totalOrcamento">R$ 0,00</div>
+                        <div class="dashboard-label">Valor total investido</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Progresso Médio</h3>
+                        <div class="dashboard-value" id="progressoMedio">0%</div>
+                        <div class="dashboard-label">Média de conclusão</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Projetos Concluídos</h3>
+                        <div class="dashboard-value" id="projetosConcluidos">0</div>
+                        <div class="dashboard-label">Finalizados com sucesso</div>
+                    </div>
+                </div>
+
+                <div class="status-cards">
+                    <div class="status-card">
+                        <h3>Status dos Projetos</h3>
+                        <div id="statusList"></div>
+                    </div>
+
+                    <div class="status-card">
+                        <h3>Próximos Vencimentos</h3>
+                        <div id="proximosVencimentos"></div>
+                    </div>
+                </div>
+
+                <!-- TIMELINE DO ADMIN -->
+                <div id="adminTimeline" class="timeline-section hidden">
+                    <div class="timeline-header">
+                        <h3>Últimas Atualizações do Sistema</h3>
+                    </div>
+                    <div class="timeline-list" id="adminTimelineList">
+                        <!-- Timeline será preenchida via JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="gestao" class="tab-content">
+                <div class="search-section">
+                    <div class="search-row">
+                        <div class="search-item">
+                            <label>Pesquisar por Mês</label>
+                            <select id="searchMonth">
+                                <option value="">Todos os meses</option>
+                                <option value="01">Janeiro</option>
+                                <option value="02">Fevereiro</option>
+                                <option value="03">Março</option>
+                                <option value="04">Abril</option>
+                                <option value="05">Maio</option>
+                                <option value="06">Junho</option>
+                                <option value="07">Julho</option>
+                                <option value="08">Agosto</option>
+                                <option value="09">Setembro</option>
+                                <option value="10">Outubro</option>
+                                <option value="11">Novembro</option>
+                                <option value="12">Dezembro</option>
+                            </select>
+                        </div>
+                        <div class="search-item">
+                            <label>Pesquisar por Projeto</label>
+                            <input type="text" id="searchProject" placeholder="Digite o nome do projeto...">
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="action-btn btn-buscar" onclick="searchProjects()">BUSCAR PROJETOS</button>
+                        <button class="action-btn btn-pdf" onclick="generatePDF()">GERAR RELATÓRIO PDF</button>
+                    </div>
+                </div>
+
+                <div class="project-list" id="projectList"></div>
+            </div>
+
+            <div id="atualizacoes" class="tab-content">
+                <div class="search-section">
+                    <div class="search-row">
+                        <div class="search-item">
+                            <label>Filtrar por Projeto</label>
+                            <select id="filterProjectUpdates">
+                                <option value="">Todos os projetos</option>
+                            </select>
+                        </div>
+                        <div class="search-item">
+                            <label>Filtrar por Tipo</label>
+                            <select id="filterTypeUpdates">
+                                <option value="">Todos os tipos</option>
+                                <option value="progresso">Atualização de Progresso</option>
+                                <option value="anotacao">Anotação</option>
+                                <option value="status">Mudança de Status</option>
+                                <option value="reuniao">Reunião</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="action-btn btn-buscar" onclick="loadUpdates()">FILTRAR ATUALIZAÇÕES</button>
+                        <button class="action-btn btn-upload" onclick="openUpdateModal()">+ NOVA ATUALIZAÇÃO</button>
+                    </div>
+                </div>
+
+                <div class="updates-container" id="updatesList">
+                    <!-- As atualizações serão carregadas aqui -->
+                </div>
+            </div>
+
+            <!-- ABA DE NOVO PROJETO MELHORADA -->
+            <div id="novo-projeto" class="tab-content">
+                <div class="search-section">
+                    <div class="last-project">
+                        <h4>Último Projeto Criado</h4>
+                        <div class="last-project-code" id="lastProjectCode">CC2401</div>
+                        <div class="project-desc">Clique no botão abaixo para iniciar um novo projeto</div>
+                    </div>
+
+                    <!-- BOTÃO MAIS DESTACADO -->
+                    <div style="text-align: center; padding: 20px;">
+                        <button class="new-project-btn" onclick="openProjectModal()">
+                            <span style="font-size: 20px;">+</span>
+                            INICIAR NOVO PROJETO
+                        </button>
+                        <p style="color: #7f8c8d; margin-top: 10px;">
+                            Preencha todas as informações necessárias para criar um novo projeto no sistema
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay" onclick="closeAllModals()"></div>
+
+    <!-- MODAL DO CHAT - ADICIONADO -->
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-header">
+            <h2>💬 Chat - Colaboradores</h2>
+            <button class="close-modal" onclick="closeChatModal()">✕</button>
+        </div>
+        <div class="chat-container">
+            <div class="chat-sidebar">
+                <div class="chat-users">
+                    <h3>Colaboradores Online</h3>
+                    <div class="user-list" id="userList">
+                        <!-- Lista de usuários será preenchida via JavaScript -->
+                    </div>
+                </div>
+                <div class="chat-rooms">
+                    <h3>Salas de Projeto</h3>
+                    <div class="room-list" id="roomList">
+                        <!-- Lista de salas será preenchida via JavaScript -->
+                    </div>
+                </div>
+            </div>
+            <div class="chat-main">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="empty-chat" id="emptyChat">
+                        <div class="empty-chat-icon">💬</div>
+                        <h3>Nenhuma mensagem ainda</h3>
+                        <p>Seja o primeiro a enviar uma mensagem!</p>
+                    </div>
+                </div>
+                <div class="typing-indicator" id="typingIndicator" style="display: none;"></div>
+                <div class="chat-input-container">
+                    <div class="file-upload-btn" onclick="document.getElementById('fileInput').click()">
+                        📎
+                    </div>
+                    <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(event)">
+                    <textarea class="chat-input" id="chatInput" placeholder="Digite sua mensagem..." rows="1"></textarea>
+                    <button class="send-btn" onclick="sendMessage()">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DO EMAIL - ADICIONADO -->
+    <div class="email-modal" id="emailModal">
+        <div class="email-header">
+            <h2>
+                <span style="color: white;">📧</span>
+                Gmail Integrado
+            </h2>
+            <button class="close-modal" onclick="closeEmailModal()">✕</button>
+        </div>
+        <div class="email-container">
+            <div class="email-sidebar">
+                <button class="sidebar-item compose-btn" onclick="composeEmail()">
+                    <span class="sidebar-icon">✏️</span>
+                    <span class="sidebar-text">Escrever</span>
+                </button>
+                <div class="sidebar-item active" onclick="setActiveItem(this)">
+                    <span class="sidebar-icon">📥</span>
+                    <span class="sidebar-text">Caixa de Entrada</span>
+                </div>
+                <div class="sidebar-item" onclick="setActiveItem(this)">
+                    <span class="sidebar-icon">⭐</span>
+                    <span class="sidebar-text">Com Estrela</span>
+                </div>
+                <div class="sidebar-item" onclick="setActiveItem(this)">
+                    <span class="sidebar-icon">⏰</span>
+                    <span class="sidebar-text">Adiados</span>
+                </div>
+                <div class="sidebar-item" onclick="setActiveItem(this)">
+                    <span class="sidebar-icon">📤</span>
+                    <span class="sidebar-text">Enviados</span>
+                </div>
+                <div class="sidebar-item" onclick="setActiveItem(this)">
+                    <span class="sidebar-icon">📝</span>
+                    <span class="sidebar-text">Rascunhos</span>
+                </div>
+                <div class="sidebar-item" onclick="setActiveItem(this)">
+                    <span class="sidebar-icon">🗑️</span>
+                    <span class="sidebar-text">Lixeira</span>
+                </div>
+            </div>
+            <div class="email-content">
+                <div class="email-toolbar">
+                    <button class="email-btn-secondary" onclick="refreshEmail()">
+                        <span>🔄</span> Atualizar
+                    </button>
+                    <button class="email-btn" onclick="openRealGmail()">
+                        <span>🔗</span> Abrir Gmail Original
+                    </button>
+                </div>
+                <!-- IFrame para incorporar o Gmail -->
+                <iframe
+                    class="email-iframe"
+                    id="emailIframe"
+                    src="about:blank"
+                    sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+                    title="Gmail Integrado"
+                ></iframe>
+
+                <!-- Placeholder caso o iframe não carregue -->
+                <div class="email-placeholder" id="emailPlaceholder">
+                    <div class="email-placeholder-icon">📧</div>
+                    <h3>Gmail Integrado</h3>
+                    <p>Para acessar seus e-mails diretamente no sistema, clique no botão abaixo:</p>
+                    <button class="email-btn" onclick="openRealGmail()" style="margin-top: 15px;">
+                        <span>🔗</span> Abrir Gmail
+                    </button>
+                    <p style="margin-top: 20px; font-size: 12px; color: #777;">
+                        Ou use o endereço: <strong id="userEmailDisplay">seu-email@gmail.com</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEUS OUTROS MODAIS MANTIDOS EXATAMENTE IGUAIS -->
+    <div class="calendar-modal" id="calendarModal">
+        <div class="calendar-header">
+            <h2>Calendário de Reuniões</h2>
+            <button class="close-modal" onclick="closeCalendar()">Fechar</button>
+        </div>
+
+        <button class="add-meeting-btn" onclick="toggleMeetingForm()">+ Nova Reunião</button>
+
+        <div id="meetingForm" class="meeting-form hidden">
+            <h3>Agendar Nova Reunião</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Título</label>
+                    <input type="text" id="meetingTitle" placeholder="Título da reunião">
+                </div>
+                <div class="form-group">
+                    <label>Projeto Relacionado</label>
+                    <select id="meetingProject">
+                        <option value="">Nenhum</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Data</label>
+                    <input type="date" id="meetingDate">
+                </div>
+                <div class="form-group">
+                    <label>Hora</label>
+                    <input type="time" id="meetingTime">
+                </div>
+                <div class="form-group">
+                    <label>Duração (minutos)</label>
+                    <input type="number" id="meetingDuration" value="60" min="15" step="15">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Participantes</label>
+                    <input type="text" id="meetingParticipants" placeholder="Nomes separados por vírgula">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="meetingDescription" placeholder="Descrição da reunião"></textarea>
+                </div>
+            </div>
+            <div class="form-buttons">
+                <button class="btn-cancel" onclick="toggleMeetingForm()">Cancelar</button>
+                <button class="btn-save" onclick="addMeeting()">Agendar Reunião</button>
+            </div>
+        </div>
+
+        <div class="calendar-section">
+            <div class="calendar-header">
+                <h2 id="currentMonth">Março 2024</h2>
+                <div class="calendar-nav">
+                    <button onclick="changeMonth(-1)">‹</button>
+                    <button onclick="goToToday()">Hoje</button>
+                    <button onclick="changeMonth(1)">›</button>
+                </div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+
+        <div class="meetings-list" id="meetingsList"></div>
+    </div>
+
+    <!-- MODAL PARA NOVA ATUALIZAÇÃO -->
+    <div class="update-modal" id="updateModal">
+        <div class="calendar-header">
+            <h2>Nova Atualização de Projeto</h2>
+            <button class="close-modal" onclick="closeUpdateModal()">Fechar</button>
+        </div>
+
+        <div class="update-form">
+            <h3 class="form-title">Registrar Atualização</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Projeto</label>
+                    <select id="updateProject">
+                        <option value="">Selecione um projeto</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Tipo de Atualização</label>
+                    <select id="updateType">
+                        <option value="progresso">Atualização de Progresso</option>
+                        <option value="anotacao">Anotação</option>
+                        <option value="status">Mudança de Status</option>
+                        <option value="reuniao">Reunião</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Progresso Atual (%)</label>
+                    <input type="number" id="updateProgress" min="0" max="100" value="0">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Descrição da Atualização</label>
+                    <textarea id="updateDescription" placeholder="Descreva as atualizações realizadas..." rows="4"></textarea>
+                </div>
+            </div>
+            <div class="form-buttons">
+                <button class="btn-cancel" onclick="closeUpdateModal()">Cancelar</button>
+                <button class="btn-save" onclick="addUpdate()">Salvar Atualização</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARA NOVO PROJETO -->
+    <div class="project-modal" id="projectModal">
+        <div class="calendar-header">
+            <h2>Novo Projeto</h2>
+            <button class="close-modal" onclick="closeProjectModal()">Fechar</button>
+        </div>
+
+        <div class="project-form">
+            <h3 class="form-title">Informações do Projeto</h3>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Título do Projeto *</label>
+                    <input type="text" id="projectTitle" placeholder="Ex: Levantamento Topográfico" required>
+                </div>
+                <div class="form-group">
+                    <label>Status *</label>
+                    <select id="projectStatus" required>
+                        <option value="">Selecione o status</option>
+                        <option value="ativo">Ativo</option>
+                        <option value="planejamento">Planejamento</option>
+                        <option value="concluído">Concluído</option>
+                        <option value="pausado">Pausado</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Descrição do Projeto *</label>
+                    <textarea id="projectDescription" placeholder="Descreva o projeto..." rows="3" required></textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Coordenador Responsável *</label>
+                    <select id="projectResponsible" required>
+                        <option value="">Selecione o coordenador</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Prazo de Entrega *</label>
+                    <input type="date" id="projectDeadline" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Orçamento (R$)</label>
+                    <input type="number" id="projectBudget" placeholder="0,00" step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <input type="text" id="projectClient" placeholder="Nome do cliente">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Localização</label>
+                    <input type="text" id="projectLocation" placeholder="Local do projeto">
+                </div>
+            </div>
+
+            <div class="form-buttons">
+                <button class="btn-cancel" onclick="closeProjectModal()">Cancelar</button>
+                <button class="btn-save" onclick="addProject()">Criar Projeto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARA TIMELINE -->
+    <div class="update-modal" id="timelineModal">
+        <div class="calendar-header">
+            <h2>Adicionar Atualização na Timeline</h2>
+            <button class="close-modal" onclick="closeTimelineModal()">Fechar</button>
+        </div>
+
+        <div class="update-form">
+            <h3 class="form-title">Nova Atualização</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Projeto</label>
+                    <select id="timelineProject">
+                        <option value="">Selecione um projeto</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Mensagem *</label>
+                    <textarea id="timelineMessage" placeholder="Descreva a atualização..." rows="4" required></textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Status Relacionado (Opcional)</label>
+                    <select id="timelineStatus">
+                        <option value="">Nenhum</option>
+                        <option value="andamento">Em Andamento</option>
+                        <option value="concluido">Concluído</option>
+                        <option value="pausado">Pausado</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-buttons">
+                <button class="btn-cancel" onclick="closeTimelineModal()">Cancelar</button>
+                <button class="btn-save" onclick="addTimeline()">Adicionar à Timeline</button>
+            </div>
+        </div>
+    </div>
+
+  <script>
+      // Iniciar autenticação
+async function connectGmail() {
+    const response = await fetch('/api/gmail/auth');
+    const data = await response.json();
+    if (data.status === 'success') {
+        window.location.href = data.auth_url;
+    }
+}
+// Buscar emails
+async function loadGmailEmails() {
+    const response = await fetch('/api/gmail/emails');
+    const data = await response.json();
+    if (data.status === 'success') {
+        displayEmails(data.emails);
+    }
+}
+// Verificar se está autenticado
+async function checkGmailAuth() {
+    const response = await fetch('/api/gmail/auth/status');
+    const data = await response.json();
+    return data.authenticated;
+}
+    // CONFIGURAÇÃO DA API
+    const API_BASE = 'http://localhost:5000/api';
+
+    // Estado global
+    let currentUser = null;
+    let allProjects = []; // Todos os projetos do sistema
+    let userProjects = []; // Projetos que o usuário atual pode ver
+    let meetings = [];
+    let updates = [];
+    let coordenadores = [];
+    let showMeetingForm = false;
+    let currentDate = new Date();
+
+    // Variáveis globais para o calendário
+    let currentCalendarDate = new Date();
+    let calendarEvents = [];
+
+    // Variáveis globais para o chat
+    let chatMessages = {};
+    let currentRoom = 'geral';
+    let onlineUsers = [];
+    let typingUsers = [];
+    let typingTimer = null;
+
+    // NOVAS FUNÇÕES PARA AVATARES
+    function getAvatarForUser(name, size = 'normal') {
+        const userAvatars = {
+            'Maurício Silva': {
+                initials: 'MS',
+                color: '#3498db',
+                photo: 'avatars/mauricio.jpg'
+            },
+            'Bárbara Oliveira': {
+                initials: 'BO',
+                color: '#e74c3c',
+                photo: 'avatars/barbara.jpg'
+            },
+            'Carlos Santos': {
+                initials: 'CS',
+                color: '#2ecc71',
+                photo: 'avatars/carlos.jpg'
+            },
+            'Ana Pereira': {
+                initials: 'AP',
+                color: '#f39c12',
+                photo: 'avatars/ana.jpg'
+            }
+        };
+
+        const user = userAvatars[name] || {
+            initials: name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2),
+            color: '#95a5a6',
+            photo: null
+        };
+
+        const sizeClass = `avatar${size !== 'normal' ? `-${size}` : ''}`;
+
+        // Se não há foto, usar as iniciais com cor
+        if (!user.photo) {
+            return `<div class="${sizeClass}" style="background-color: ${user.color}">
+                <div class="avatar-initials">${user.initials}</div>
+            </div>`;
+        }
+
+        // Se há foto, tentar carregar a imagem
+        return `<img src="${user.photo}" alt="${name}" class="${sizeClass}" onerror="this.onerror=null; this.src=''; this.outerHTML='<div class=\\'${sizeClass}\\' style=\\'background-color: ${user.color}\\'><div class=\\'avatar-initials\\'>${user.initials}</div></div>'">`;
+    }
+
+    function getResponsibleWithAvatar(name, showName = true, size = 'normal') {
+        const avatarHTML = getAvatarForUser(name, size);
+        if (!showName) {
+            return avatarHTML;
+        }
+        return `
+            <div class="responsible-with-avatar">
+                ${avatarHTML}
+                <span>${name}</span>
+            </div>
+        `;
+    }
+
+    // FUNÇÕES DO CHAT - ADICIONADAS
+    function openChatModal() {
+        document.getElementById('chatModal').classList.add('active');
+        document.getElementById('modalOverlay').classList.add('active');
+        
+        loadChatData();
+        loadOnlineUsers();
+        updateChatBadge();
+        
+        // Focar no input do chat
+        setTimeout(() => {
+            document.getElementById('chatInput').focus();
+        }, 100);
+    }
+
+    function closeChatModal() {
+        document.getElementById('chatModal').classList.remove('active');
+        document.getElementById('modalOverlay').classList.remove('active');
+        
+        // Remover badge de notificação
+        document.getElementById('chatBadge').classList.add('hidden');
+    }
+
+    function loadChatData() {
+        // Dados mockados do chat - em uma aplicação real viria de um backend
+        const mockChatData = {
+            'geral': [
+                {
+                    id: 1,
+                    sender: 'Maurício Silva',
+                    message: 'Olá pessoal! Bem-vindos ao chat da MDGEO!',
+                    timestamp: new Date(Date.now() - 3600000).toISOString(),
+                    type: 'text'
+                },
+                {
+                    id: 2,
+                    sender: 'Bárbara Oliveira',
+                    message: 'Oi Maurício! Que legal essa nova funcionalidade!',
+                    timestamp: new Date(Date.now() - 3500000).toISOString(),
+                    type: 'text'
+                },
+                {
+                    id: 3,
+                    sender: 'Carlos Santos',
+                    message: 'Finalmente podemos conversar em tempo real sobre os projetos!',
+                    timestamp: new Date(Date.now() - 3400000).toISOString(),
+                    type: 'text'
+                }
+            ],
+            'cc2401': [
+                {
+                    id: 4,
+                    sender: 'Maurício Silva',
+                    message: 'Alguém tem atualizações sobre o CC2401?',
+                    timestamp: new Date(Date.now() - 1800000).toISOString(),
+                    type: 'text'
+                }
+            ]
+        };
+
+        chatMessages = mockChatData;
+        loadRooms();
+        loadRoomMessages(currentRoom);
+    }
+
+    function loadOnlineUsers() {
+        // Simular usuários online
+        onlineUsers = [
+            { name: 'Maurício Silva', status: 'online', lastActive: new Date() },
+            { name: 'Bárbara Oliveira', status: 'online', lastActive: new Date(Date.now() - 300000) },
+            { name: 'Carlos Santos', status: 'offline', lastActive: new Date(Date.now() - 3600000) },
+            { name: 'Ana Pereira', status: 'online', lastActive: new Date() }
+        ];
+
+        const userList = document.getElementById('userList');
+        userList.innerHTML = '';
+
+        onlineUsers.forEach(user => {
+            const userElement = document.createElement('div');
+            userElement.className = `user-item ${user.status === 'online' ? 'active' : ''}`;
+            userElement.innerHTML = `
+                ${getAvatarForUser(user.name, 'small')}
+                <div style="flex: 1;">
+                    <div style="font-weight: 500;">${user.name}</div>
+                    <div style="font-size: 11px; color: #7f8c8d;">
+                        ${user.status === 'online' ? 'Online' : `Último acesso: ${formatTime(user.lastActive)}`}
+                    </div>
+                </div>
+                <div class="user-status ${user.status === 'online' ? '' : 'offline'}"></div>
+            `;
+            userList.appendChild(userElement);
+        });
+    }
+
+    function loadRooms() {
+        const roomList = document.getElementById('roomList');
+        roomList.innerHTML = '';
+
+        const rooms = [
+            { id: 'geral', name: 'Geral', lastMessage: 'Bem-vindos ao chat da MDGEO!', unread: 0 },
+            { id: 'cc2401', name: 'CC2401 - Topografia Centro', lastMessage: 'Alguém tem atualizações?', unread: 1 },
+            { id: 'ge2402', name: 'GE2402 - Georreferenciamento', lastMessage: 'Reunião amanhã às 14h', unread: 0 },
+            { id: 'md2403', name: 'MD2403 - Monitoramento', lastMessage: 'Relatório finalizado', unread: 0 }
+        ];
+
+        rooms.forEach(room => {
+            const roomElement = document.createElement('div');
+            roomElement.className = `room-item ${room.id === currentRoom ? 'active' : ''}`;
+            roomElement.onclick = () => switchRoom(room.id);
+            
+            roomElement.innerHTML = `
+                <div class="room-name">${room.name}</div>
+                <div class="room-last-message">${room.lastMessage}</div>
+                ${room.unread > 0 ? `<div style="background: #e74c3c; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: flex; align-items: center; justify-content: center; margin-top: 5px;">${room.unread}</div>` : ''}
+            `;
+            
+            roomList.appendChild(roomElement);
+        });
+    }
+
+    function switchRoom(roomId) {
+        currentRoom = roomId;
+        loadRoomMessages(roomId);
+        loadRooms(); // Atualizar a lista para destacar a sala atual
+    }
+
+    function loadRoomMessages(roomId) {
+        const chatMessagesContainer = document.getElementById('chatMessages');
+        const emptyChat = document.getElementById('emptyChat');
+        
+        const messages = chatMessages[roomId] || [];
+        
+        if (messages.length === 0) {
+            emptyChat.style.display = 'flex';
+            chatMessagesContainer.innerHTML = '';
+            chatMessagesContainer.appendChild(emptyChat);
+            return;
+        }
+        
+        emptyChat.style.display = 'none';
+        chatMessagesContainer.innerHTML = '';
+        
+        messages.forEach(msg => {
+            const messageElement = document.createElement('div');
+            const isOwnMessage = msg.sender === currentUser.name;
+            
+            messageElement.className = `message ${isOwnMessage ? 'own' : 'other'}`;
+            
+            let messageContent = `
+                <div class="message-sender">${msg.sender}</div>
+                <div class="message-text">${msg.message}</div>
+                <div class="message-time">${formatTime(new Date(msg.timestamp))}</div>
+            `;
+            
+            if (msg.file) {
+                messageContent += `
+                    <div class="message-file">
+                        <div class="file-icon">📎</div>
+                        <div class="file-info">
+                            <div class="file-name">${msg.file.name}</div>
+                            <div class="file-size">${formatFileSize(msg.file.size)}</div>
+                        </div>
+                        <button class="download-btn" onclick="downloadFile('${msg.file.url}', '${msg.file.name}')">Baixar</button>
+                    </div>
+                `;
+            }
+            
+            messageElement.innerHTML = messageContent;
+            chatMessagesContainer.appendChild(messageElement);
+        });
+        
+        // Rolagem automática para a última mensagem
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        // Adicionar mensagem ao chat
+        if (!chatMessages[currentRoom]) {
+            chatMessages[currentRoom] = [];
+        }
+        
+        const newMessage = {
+            id: chatMessages[currentRoom].length + 1,
+            sender: currentUser.name,
+            message: message,
+            timestamp: new Date().toISOString(),
+            type: 'text'
+        };
+        
+        chatMessages[currentRoom].push(newMessage);
+        
+        // Limpar input e atualizar interface
+        input.value = '';
+        input.style.height = 'auto';
+        loadRoomMessages(currentRoom);
+        
+        // Simular resposta automática em alguns casos
+        simulateAutoReply(message);
+    }
+
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        // Verificar tamanho do arquivo (limite de 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('Arquivo muito grande. O limite é 10MB.');
+            return;
+        }
+        
+        // Simular upload do arquivo
+        const fileUrl = URL.createObjectURL(file);
+        
+        if (!chatMessages[currentRoom]) {
+            chatMessages[currentRoom] = [];
+        }
+        
+        const newMessage = {
+            id: chatMessages[currentRoom].length + 1,
+            sender: currentUser.name,
+            message: 'Arquivo compartilhado:',
+            timestamp: new Date().toISOString(),
+            type: 'file',
+            file: {
+                name: file.name,
+                size: file.size,
+                url: fileUrl,
+                type: file.type
+            }
+        };
+        
+        chatMessages[currentRoom].push(newMessage);
+        loadRoomMessages(currentRoom);
+        
+        // Limpar input de arquivo
+        event.target.value = '';
+    }
+
+    function downloadFile(url, filename) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+    }
+
+    function formatTime(date) {
+        return date.toLocaleTimeString('pt-BR', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function simulateAutoReply(message) {
+        // Simular respostas automáticas baseadas no conteúdo da mensagem
+        const lowerMessage = message.toLowerCase();
+        let autoReply = null;
+        
+        if (lowerMessage.includes('olá') || lowerMessage.includes('oi') || lowerMessage.includes('bom dia')) {
+            autoReply = {
+                sender: 'Sistema MDGEO',
+                message: 'Olá! Como posso ajudar? Lembre-se de compartilhar arquivos relevantes para o projeto!',
+                delay: 2000
+            };
+        } else if (lowerMessage.includes('reunião') || lowerMessage.includes('encontro')) {
+            autoReply = {
+                sender: 'Sistema MDGEO',
+                message: 'Não se esqueça de agendar reuniões no calendário do sistema!',
+                delay: 1500
+            };
+        } else if (lowerMessage.includes('projeto') && lowerMessage.includes('status')) {
+            autoReply = {
+                sender: 'Sistema MDGEO',
+                message: 'Verifique o status dos projetos na aba "Gestão de Projetos".',
+                delay: 1500
+            };
+        }
+        
+        if (autoReply) {
+            setTimeout(() => {
+                if (!chatMessages[currentRoom]) {
+                    chatMessages[currentRoom] = [];
+                }
+                
+                const replyMessage = {
+                    id: chatMessages[currentRoom].length + 1,
+                    sender: autoReply.sender,
+                    message: autoReply.message,
+                    timestamp: new Date().toISOString(),
+                    type: 'text'
+                };
+                
+                chatMessages[currentRoom].push(replyMessage);
+                loadRoomMessages(currentRoom);
+            }, autoReply.delay);
+        }
+    }
+
+    function updateChatBadge() {
+        const chatBadge = document.getElementById('chatBadge');
+        let totalUnread = 0;
+        
+        // Calcular mensagens não lidas (simulação)
+        Object.keys(chatMessages).forEach(room => {
+            if (room !== currentRoom) {
+                totalUnread += chatMessages[room] ? chatMessages[room].length : 0;
+            }
+        });
+        
+        if (totalUnread > 0) {
+            chatBadge.textContent = totalUnread > 9 ? '9+' : totalUnread;
+            chatBadge.classList.remove('hidden');
+        } else {
+            chatBadge.classList.add('hidden');
+        }
+    }
+
+    // FUNÇÕES DO EMAIL - ADICIONADAS
+    function openEmailModal() {
+        if (!currentUser) return;
+
+        document.getElementById('emailModal').classList.add('active');
+        document.getElementById('modalOverlay').classList.add('active');
+
+        // Atualizar e-mail do usuário no placeholder
+        document.getElementById('userEmailDisplay').textContent = currentUser.email;
+
+        // Tentar carregar o Gmail no iframe
+        try {
+            const iframe = document.getElementById('emailIframe');
+            const placeholder = document.getElementById('emailPlaceholder');
+
+            const userEmail = currentUser.email;
+            if (userEmail.includes('@gmail.com')) {
+                // Tentar carregar a versão mobile do Gmail
+                iframe.src = 'https://mail.google.com/mail/u/0/?ui=html&zy=h';
+                iframe.style.display = 'block';
+                placeholder.style.display = 'none';
+            } else {
+                // Para outros provedores, mostrar placeholder
+                iframe.style.display = 'none';
+                placeholder.style.display = 'flex';
+            }
+        } catch (error) {
+            console.error('Erro ao carregar Gmail:', error);
+            document.getElementById('emailIframe').style.display = 'none';
+            document.getElementById('emailPlaceholder').style.display = 'flex';
+        }
+
+        // Remover badge de notificação
+        document.getElementById('emailBadge').classList.add('hidden');
+    }
+
+    function closeEmailModal() {
+        document.getElementById('emailModal').classList.remove('active');
+        document.getElementById('modalOverlay').classList.remove('active');
+
+        // Parar o carregamento do iframe
+        const iframe = document.getElementById('emailIframe');
+        iframe.src = 'about:blank';
+    }
+
+    function openRealGmail() {
+        const userEmail = currentUser.email;
+        if (userEmail.includes('@gmail.com')) {
+            window.open('https://mail.google.com/mail/u/0/#inbox', '_blank');
+        } else if (userEmail.includes('@outlook.com') || userEmail.includes('@hotmail.com')) {
+            window.open('https://outlook.live.com/mail/', '_blank');
+        } else if (userEmail.includes('@yahoo.com')) {
+            window.open('https://mail.yahoo.com', '_blank');
+        } else {
+            const domain = userEmail.split('@')[1];
+            window.open(`https://${domain}`, '_blank');
+        }
+    }
+
+    function refreshEmail() {
+        const iframe = document.getElementById('emailIframe');
+        if (iframe.src && iframe.src !== 'about:blank') {
+            iframe.src = iframe.src;
+        }
+    }
+
+    function setActiveItem(element) {
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        element.classList.add('active');
+    }
+
+    function composeEmail() {
+        const userEmail = currentUser.email;
+        let composeUrl;
+
+        if (userEmail.includes('@gmail.com')) {
+            composeUrl = 'https://mail.google.com/mail/u/0/?view=cm&fs=1&to=&su=&body=';
+        } else if (userEmail.includes('@outlook.com') || userEmail.includes('@hotmail.com')) {
+            composeUrl = 'https://outlook.live.com/owa/?path=/mail/action/compose';
+        } else {
+            composeUrl = `mailto:?subject=&body=`;
+        }
+
+        window.open(composeUrl, '_blank');
+    }
+
+    function updateEmailBadge() {
+        const emailBadge = document.getElementById('emailBadge');
+        const hasUnreadNotifications = Math.random() > 0.5;
+        const notificationCount = hasUnreadNotifications ? 1 : 0;
+
+        if (notificationCount > 0) {
+            emailBadge.textContent = notificationCount;
+            emailBadge.classList.remove('hidden');
+        } else {
+            emailBadge.classList.add('hidden');
+        }
+    }
+
+    // FUNÇÕES DO CALENDÁRIO CORRIGIDAS
+    function openCalendar() {
+        loadCalendar();
+        loadMeetingsList();
+        document.getElementById('calendarModal').classList.add('active');
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeCalendar() {
+        document.getElementById('calendarModal').classList.remove('active');
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function loadCalendar() {
+        const calendarGrid = document.getElementById('calendarGrid');
+        const currentMonthElement = document.getElementById('currentMonth');
+
+        // Configurar mês atual
+        const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                           "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+        currentMonthElement.textContent = `${monthNames[currentCalendarDate.getMonth()]} ${currentCalendarDate.getFullYear()}`;
+
+        // Gerar cabeçalhos dos dias
+        calendarGrid.innerHTML = '';
+        const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+        daysOfWeek.forEach(day => {
+            const dayHeader = document.createElement('div');
+            dayHeader.className = 'calendar-day-header';
+            dayHeader.textContent = day;
+            calendarGrid.appendChild(dayHeader);
+        });
+
+        // Obter primeiro e último dia do mês
+        const firstDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 1);
+        const lastDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth() + 1, 0);
+
+        // Dias do mês anterior
+        const startingDayOfWeek = firstDay.getDay();
+        const prevMonthLastDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 0).getDate();
+
+        // Adicionar dias do mês anterior
+        for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+            const dayElement = createDayElement(prevMonthLastDay - i, true);
+            calendarGrid.appendChild(dayElement);
+        }
+
+        // Adicionar dias do mês atual
+        for (let day = 1; day <= lastDay.getDate(); day++) {
+            const dayElement = createDayElement(day, false);
+
+            // Verificar se é hoje
+            const today = new Date();
+            if (day === today.getDate() &&
+                currentCalendarDate.getMonth() === today.getMonth() &&
+                currentCalendarDate.getFullYear() === today.getFullYear()) {
+                dayElement.classList.add('today');
+            }
+
+            calendarGrid.appendChild(dayElement);
+        }
+
+        // Preencher dias restantes
+        const totalCells = 42; // 6 semanas * 7 dias
+        const remainingCells = totalCells - (startingDayOfWeek + lastDay.getDate());
+        for (let day = 1; day <= remainingCells; day++) {
+            const dayElement = createDayElement(day, true);
+            calendarGrid.appendChild(dayElement);
+        }
+
+        loadMeetingsForCalendar();
+    }
+
+    function createDayElement(dayNumber, isOtherMonth) {
+        const dayElement = document.createElement('div');
+        dayElement.className = `calendar-day ${isOtherMonth ? 'other-month' : ''}`;
+
+        const dayNumberElement = document.createElement('div');
+        dayNumberElement.className = 'calendar-day-number';
+        dayNumberElement.textContent = dayNumber;
+        dayElement.appendChild(dayNumberElement);
+
+        // Container para eventos
+        const eventsContainer = document.createElement('div');
+        eventsContainer.className = 'calendar-events';
+        dayElement.appendChild(eventsContainer);
+
+        return dayElement;
+    }
+
+    function loadMeetingsForCalendar() {
+        // Simular carregamento de reuniões (substituir por chamada API real)
+        const mockMeetings = [
+            { date: '2024-03-20', title: 'Reunião CC2401', time: '14:00' },
+            { date: '2024-03-25', title: 'Apresentação Cliente', time: '10:00' },
+            { date: '2024-03-15', title: 'Revisão GE2402', time: '16:30' }
+        ];
+
+        calendarEvents = mockMeetings;
+        renderMeetingsOnCalendar();
+    }
+
+    function renderMeetingsOnCalendar() {
+        // Limpar eventos anteriores
+        document.querySelectorAll('.calendar-event').forEach(event => event.remove());
+
+        calendarEvents.forEach(meeting => {
+            const meetingDate = new Date(meeting.date);
+
+            // Verificar se a reunião é do mês atual
+            if (meetingDate.getMonth() === currentCalendarDate.getMonth() &&
+                meetingDate.getFullYear() === currentCalendarDate.getFullYear()) {
+
+                const dayElement = findDayElement(meetingDate.getDate());
+                if (dayElement) {
+                    const eventElement = document.createElement('div');
+                    eventElement.className = 'calendar-event meeting';
+                    eventElement.title = `${meeting.title} - ${meeting.time}`;
+                    eventElement.textContent = `${meeting.time} - ${meeting.title}`;
+
+                    const eventsContainer = dayElement.querySelector('.calendar-events');
+                    if (eventsContainer) {
+                        eventsContainer.appendChild(eventElement);
+                    }
+                }
+            }
+        });
+    }
+
+    function findDayElement(dayNumber) {
+        const days = document.querySelectorAll('.calendar-day:not(.other-month)');
+        for (let day of days) {
+            const dayNumElement = day.querySelector('.calendar-day-number');
+            if (dayNumElement && parseInt(dayNumElement.textContent) === dayNumber) {
+                return day;
+            }
+        }
+        return null;
+    }
+
+    function changeMonth(direction) {
+        currentCalendarDate.setMonth(currentCalendarDate.getMonth() + direction);
+        loadCalendar();
+    }
+
+    function goToToday() {
+        currentCalendarDate = new Date();
+        loadCalendar();
+    }
+
+    function loadMeetingsList() {
+        const meetingsList = document.getElementById('meetingsList');
+        meetingsList.innerHTML = '';
+
+        if (calendarEvents.length === 0) {
+            meetingsList.innerHTML = '<p>Nenhuma reunião agendada</p>';
+            return;
+        }
+
+        // Ordenar reuniões por data
+        const sortedMeetings = [...calendarEvents].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        sortedMeetings.forEach(meeting => {
+            const meetingDate = new Date(meeting.date);
+            const meetingItem = document.createElement('div');
+            meetingItem.className = 'meeting-item';
+
+            meetingItem.innerHTML = `
+                <div class="meeting-header">
+                    <div class="meeting-title">${meeting.title}</div>
+                    <div class="meeting-date">${formatDate(meeting.date)} ${meeting.time}</div>
+                </div>
+                <div class="meeting-description">${meeting.description || 'Sem descrição'}</div>
+            `;
+
+            meetingsList.appendChild(meetingItem);
+        });
+    }
+
+    function toggleMeetingForm() {
+        showMeetingForm = !showMeetingForm;
+        const form = document.getElementById('meetingForm');
+
+        if (showMeetingForm) {
+            form.classList.remove('hidden');
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('meetingDate').value = today;
+        } else {
+            form.classList.add('hidden');
+        }
+    }
+
+    function addMeeting() {
+        const title = document.getElementById('meetingTitle').value.trim();
+        const date = document.getElementById('meetingDate').value;
+        const time = document.getElementById('meetingTime').value;
+        const duration = document.getElementById('meetingDuration').value;
+        const participants = document.getElementById('meetingParticipants').value;
+        const description = document.getElementById('meetingDescription').value.trim();
+        const projectId = document.getElementById('meetingProject').value;
+
+        if (!title || !date || !time) {
+            alert('Por favor, preencha título, data e hora!');
+            return;
+        }
+
+        // Criar novo evento
+        const newMeeting = {
+            id: calendarEvents.length + 1,
+            title: title,
+            date: date,
+            time: time,
+            duration: duration,
+            participants: participants,
+            description: description,
+            projectId: projectId
+        };
+
+        calendarEvents.push(newMeeting);
+
+        // Atualizar calendário e lista
+        renderMeetingsOnCalendar();
+        loadMeetingsList();
+
+        // Fechar formulário e limpar campos
+        toggleMeetingForm();
+        document.getElementById('meetingTitle').value = '';
+        document.getElementById('meetingDate').value = '';
+        document.getElementById('meetingTime').value = '';
+        document.getElementById('meetingDuration').value = '60';
+        document.getElementById('meetingParticipants').value = '';
+        document.getElementById('meetingDescription').value = '';
+        document.getElementById('meetingProject').value = '';
+
+        // Atualizar badge
+        updateCalendarBadge();
+
+        alert('Reunião agendada com sucesso!');
+    }
+
+    function updateCalendarBadge() {
+        const calendarBadge = document.getElementById('calendarBadge');
+        const today = new Date().toISOString().split('T')[0];
+
+        // Contar reuniões de hoje
+        const todayMeetings = calendarEvents.filter(meeting => meeting.date === today).length;
+
+        if (todayMeetings > 0) {
+            calendarBadge.textContent = todayMeetings;
+            calendarBadge.classList.remove('hidden');
+        } else {
+            calendarBadge.classList.add('hidden');
+        }
+    }
+
+    // FUNÇÃO CANCELAR PROJETO CORRIGIDA
+    function cancelProject(projectId) {
+        if (!confirm('Tem certeza que deseja cancelar e excluir este projeto? Esta ação não pode ser desfeita.')) {
+            return;
+        }
+
+        // Encontrar o índice do projeto em allProjects
+        const projectIndex = allProjects.findIndex(p => p.id === projectId);
+        if (projectIndex !== -1) {
+            // Remover completamente o projeto do array allProjects
+            allProjects.splice(projectIndex, 1);
+
+            // Atualizar userProjects (que é uma visão filtrada de allProjects)
+            filterUserProjects();
+
+            alert('Projeto cancelado e removido com sucesso!');
+            updateDashboardWithMockData();
+            updateProjectList();
+
+            // Atualizar também os filtros e opções
+            updateMeetingProjectOptions();
+            updateProjectFilter();
+        }
+    }
+
+    // SUAS FUNÇÕES ORIGINAIS MANTIDAS
+    function fillCredentials(email, password) {
+        document.getElementById('email').value = email;
+        document.getElementById('password').value = password;
+    }
+
+    function login() {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        if (!email || !password) {
+            alert('Por favor, preencha email e senha!');
+            return;
+        }
+
+        const users = {
+            'mauricio@mdgeo.com.br': {
+                name: 'Maurício Silva',
+                role: 'Administrador',
+                canSeeAll: true,
+                canCreateProjects: true,
+                email: 'mauricio@mdgeo.com.br'
+            },
+            'barbara@mdgeo.com.br': {
+                name: 'Bárbara Oliveira',
+                role: 'Coordenadora',
+                canSeeAll: false,
+                canCreateProjects: false,
+                email: 'barbara@mdgeo.com.br'
+            },
+            'carlos@mdgeo.com.br': {
+                name: 'Carlos Santos',
+                role: 'Coordenador',
+                canSeeAll: false,
+                canCreateProjects: false,
+                email: 'carlos@mdgeo.com.br'
+            }
+        };
+
+        if (users[email] && password === 'admin123') {
+            currentUser = users[email];
+            showMainApp();
+            loadMockData();
+            filterUserProjects();
+            setupUserPermissions();
+            updateEmailBadge();
+            updateChatBadge(); // Adicionado para inicializar o badge do chat
+        } else {
+            alert('Email ou senha incorretos!');
+        }
+    }
+
+    function filterUserProjects() {
+        if (currentUser.canSeeAll) {
+            userProjects = [...allProjects];
+        } else {
+            userProjects = allProjects.filter(project =>
+                project.responsavel === currentUser.name
+            );
+        }
+    }
+
+    function loadMockData() {
+        allProjects = [
+            {
+                id: 1,
+                codigo: 'CC2401',
+                titulo: 'Levantamento Topográfico - Centro',
+                descricao: 'Levantamento topográfico para projeto de urbanização',
+                responsavel: 'Maurício Silva',
+                coordenador_nome: 'Maurício Silva',
+                status: 'ativo',
+                data_inicio: '2024-01-15',
+                data_fim: '2024-06-30',
+                orcamento: 25000.00,
+                progresso: 65,
+                cliente: 'Prefeitura Municipal',
+                localizacao: 'Centro'
+            },
+            {
+                id: 2,
+                codigo: 'GE2402',
+                titulo: 'Georreferenciamento - Zona Norte',
+                descricao: 'Georreferenciamento de imóveis rurais',
+                responsavel: 'Bárbara Oliveira',
+                coordenador_nome: 'Bárbara Oliveira',
+                status: 'planejamento',
+                data_inicio: '2024-02-01',
+                data_fim: '2024-12-31',
+                orcamento: 18000.00,
+                progresso: 15,
+                cliente: 'Fazenda São João',
+                localizacao: 'Zona Rural'
+            },
+            {
+                id: 3,
+                codigo: 'MD2403',
+                titulo: 'Monitoramento de Área de Risco',
+                descricao: 'Monitoramento de encostas com tecnologia LiDAR',
+                responsavel: 'Carlos Santos',
+                coordenador_nome: 'Carlos Santos',
+                status: 'concluído',
+                data_inicio: '2023-11-10',
+                data_fim: '2024-03-15',
+                orcamento: 42000.00,
+                progresso: 100,
+                cliente: 'DEFESA CIVIL',
+                localizacao: 'Encosta Sul'
+            },
+            {
+                id: 4,
+                codigo: 'TP2404',
+                titulo: 'Topografia para Loteamento',
+                descricao: 'Serviços topográficos para novo loteamento residencial',
+                responsavel: 'Bárbara Oliveira',
+                coordenador_nome: 'Bárbara Oliveira',
+                status: 'pausado',
+                data_inicio: '2024-03-01',
+                data_fim: '2024-08-30',
+                orcamento: 32000.00,
+                progresso: 30,
+                cliente: 'Construtora Planalto',
+                localizacao: 'Bairro Jardins'
+            }
+        ];
+
+        meetings = [
+            {
+                id: 1,
+                title: 'Reunião de Alinhamento - CC2401',
+                date: '2024-03-20',
+                time: '14:00',
+                duration: 60,
+                project: 1,
+                participants: 'Maurício, Bárbara, Carlos',
+                description: 'Reunião para alinhamento do projeto de levantamento topográfico'
+            }
+        ];
+
+        coordenadores = [
+            { id: 1, name: 'Maurício Silva' },
+            { id: 2, name: 'Bárbara Oliveira' },
+            { id: 3, name: 'Carlos Santos' }
+        ];
+
+        updateDashboardWithMockData();
+        updateProjectList();
+        updateMeetingProjectOptions();
+        updateCalendarBadge();
+        updateProjectFilter();
+    }
+
+    function updateDashboardWithMockData() {
+        // Filtrar apenas projetos ativos para o dashboard
+        const activeUserProjects = userProjects.filter(project => project.status !== 'cancelado');
+
+        document.getElementById('totalProjetos').textContent = activeUserProjects.length;
+
+        const totalOrcamento = activeUserProjects.reduce((sum, project) =>
+            sum + (parseFloat(project.orcamento) || 0), 0);
+        document.getElementById('totalOrcamento').textContent = `R$ ${totalOrcamento.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+
+        const progressoMedio = activeUserProjects.length > 0 ?
+            activeUserProjects.reduce((sum, project) => sum + (project.progresso || 0), 0) / activeUserProjects.length : 0;
+        document.getElementById('progressoMedio').textContent = `${progressoMedio.toFixed(1)}%`;
+
+        const projetosConcluidos = activeUserProjects.filter(project => project.status === 'concluído').length;
+        document.getElementById('projetosConcluidos').textContent = projetosConcluidos;
+
+        const statusCounts = {};
+        activeUserProjects.forEach(project => {
+            statusCounts[project.status] = (statusCounts[project.status] || 0) + 1;
+        });
+
+        let statusHTML = '';
+        Object.keys(statusCounts).forEach(status => {
+            const count = statusCounts[status];
+            statusHTML += `
+                <div class="status-item">
+                    <span>${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+                    <span class="status-count">${count}</span>
+                </div>
+            `;
+        });
+        document.getElementById('statusList').innerHTML = statusHTML;
+
+        let vencimentosHTML = '';
+        const projetosComVencimento = activeUserProjects.filter(p => p.data_fim && p.status !== 'concluído' && p.status !== 'pausado');
+        if (projetosComVencimento.length > 0) {
+            projetosComVencimento
+                .sort((a, b) => new Date(a.data_fim) - new Date(b.data_fim))
+                .slice(0, 5)
+                .forEach(project => {
+                    vencimentosHTML += `
+                        <div class="status-item">
+                            <span>${project.codigo}</span>
+                            <span>${formatDate(project.data_fim)}</span>
+                        </div>
+                    `;
+                });
+        } else {
+            vencimentosHTML = '<div class="status-item">Nenhum vencimento próximo</div>';
+        }
+        document.getElementById('proximosVencimentos').innerHTML = vencimentosHTML;
+
+        if (currentUser.name === 'Maurício Silva') {
+            document.getElementById('adminTimeline').classList.remove('hidden');
+            let timelineHTML = '';
+            allProjects
+                .filter(project => project.status !== 'cancelado')
+                .slice(0, 3)
+                .forEach(project => {
+                    timelineHTML += `
+                        <div class="timeline-item">
+                            <div class="timeline-header-info">
+                                <div class="responsible-with-avatar">
+                                    ${getAvatarForUser(project.responsavel, 'small')}
+                                    <span class="timeline-author">${project.responsavel} - ${project.codigo}</span>
+                                </div>
+                                <span class="timeline-date">${formatDate(project.data_inicio)}</span>
+                            </div>
+                            <div class="timeline-message">Projeto ${project.status} - ${project.titulo}</div>
+                        </div>
+                    `;
+                });
+            document.getElementById('adminTimelineList').innerHTML = timelineHTML;
+        }
+    }
+
+    function setupUserPermissions() {
+        const permissionWarning = document.getElementById('permissionWarning');
+        const dashboardRestricted = document.getElementById('dashboardRestricted');
+        const novoTab = document.getElementById('novoProjetoTab');
+
+        dashboardRestricted.classList.add('hidden');
+
+        if (!currentUser.canSeeAll) {
+            permissionWarning.classList.remove('hidden');
+        } else {
+            permissionWarning.classList.add('hidden');
+        }
+
+        if (!currentUser.canCreateProjects) {
+            novoTab.classList.add('hidden');
+            if (document.getElementById('novo-projeto').classList.contains('active')) {
+                showTab('gestao');
+            }
+        } else {
+            novoTab.classList.remove('hidden');
+        }
+    }
+
+    function showMainApp() {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userRole').textContent = currentUser.role;
+    }
+
+    function updateProjectList() {
+        const projectList = document.getElementById('projectList');
+        projectList.innerHTML = '';
+
+        // Filtrar apenas projetos não cancelados
+        const activeProjects = userProjects.filter(project => project.status !== 'cancelado');
+
+        if (activeProjects.length === 0) {
+            projectList.innerHTML = `
+                <div class="no-annotations" style="text-align: center; padding: 40px;">
+                    <h3>Nenhum projeto encontrado</h3>
+                    <p>${!currentUser.canSeeAll ? 'Você não é responsável por nenhum projeto no momento.' : 'Nenhum projeto cadastrado no sistema.'}</p>
+                </div>
+            `;
+            return;
+        }
+
+        activeProjects.forEach(project => {
+            let statusClass = '';
+            if (project.status === 'concluído') statusClass = 'status-concluido';
+            else if (project.status === 'ativo') statusClass = 'status-andamento';
+            else if (project.status === 'planejamento') statusClass = 'status-planejamento';
+            else if (project.status === 'pausado') statusClass = 'status-pausado';
+
+            let progressClass = '';
+            if (project.status === 'pausado') {
+                progressClass = 'progress-pausado';
+            } else if (project.progresso === 100) {
+                progressClass = 'progress-100';
+            } else if (project.progresso >= 50) {
+                progressClass = 'progress-65';
+            } else {
+                progressClass = 'progress-15';
+            }
+
+            const canAddAnnotations = currentUser.canSeeAll || project.responsavel === currentUser.name;
+            const canCancelProject = currentUser.canCreateProjects;
+
+            const projectHTML = `
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-code">
+                            ${project.codigo}
+                            ${project.status === 'pausado' ? '<span class="paused-indicator">⏸️ PAUSADO</span>' : ''}
+                        </div>
+                        ${canCancelProject ?
+                            `<button class="drop-project-btn" onclick="cancelProject(${project.id})">Cancelar Projeto</button>` : ''}
+                    </div>
+                    <div class="project-desc">${project.titulo || project.descricao}</div>
+                    <div class="project-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Responsável</div>
+                            <div class="detail-value">
+                                ${getResponsibleWithAvatar(project.responsavel || project.coordenador_nome, true, 'normal')}
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Situação</div>
+                            <div class="detail-value ${statusClass}">${project.status}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Início</div>
+                            <div class="detail-value">${formatDate(project.data_inicio)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Término</div>
+                            <div class="detail-value">${formatDate(project.data_fim)}</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill ${progressClass}"></div>
+                    </div>
+
+                    <div class="timeline-section">
+                        <div class="timeline-header">
+                            <h4>Timeline do Projeto</h4>
+                            ${canAddAnnotations ? `<button class="btn-add-timeline" onclick="openTimelineModal(${project.id})">+ Adicionar Atualização</button>` : ''}
+                        </div>
+                        <div class="timeline-list" id="timeline-${project.id}">
+                            <!-- Timeline será carregada via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            projectList.innerHTML += projectHTML;
+        });
+
+        activeProjects.forEach(project => {
+            loadProjectTimeline(project.id);
+        });
+    }
+
+    function loadProjectTimeline(projectId) {
+        const timelineContainer = document.getElementById(`timeline-${projectId}`);
+        if (timelineContainer) {
+            const project = allProjects.find(p => p.id === projectId);
+            if (project) {
+                const timelineData = [
+                    {
+                        autor_nome: currentUser.name,
+                        data_formatada: formatDate(new Date().toISOString().split('T')[0]),
+                        mensagem: project.status === 'pausado' ? 'Projeto pausado temporariamente.' : 'Projeto iniciado com sucesso.'
+                    }
+                ];
+
+                let timelineHTML = '';
+                timelineData.forEach(item => {
+                    timelineHTML += `
+                        <div class="timeline-item">
+                            <div class="timeline-header-info">
+                                <div class="responsible-with-avatar">
+                                    ${getAvatarForUser(item.autor_nome, 'small')}
+                                    <span class="timeline-author">${item.autor_nome}</span>
+                                </div>
+                                <span class="timeline-date">${item.data_formatada}</span>
+                            </div>
+                            <div class="timeline-message">${item.mensagem}</div>
+                        </div>
+                    `;
+                });
+                timelineContainer.innerHTML = timelineHTML;
+            }
+        }
+    }
+
+    function showTab(tabId) {
+        if (tabId === 'novo-projeto' && !currentUser.canCreateProjects) {
+            alert('Você não tem permissão para criar novos projetos. Entre em contato com o administrador.');
+            return;
+        }
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+
+        document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+
+        if (tabId === 'atualizacoes') {
+            loadUpdates();
+        } else if (tabId === 'gestao') {
+            updateProjectList();
+        }
+    }
+
+    function openProjectModal() {
+        if (!currentUser.canCreateProjects) {
+            alert('Você não tem permissão para criar novos projetos. Entre em contato com o administrador.');
+            return;
+        }
+
+        document.getElementById('projectModal').classList.add('active');
+        document.getElementById('modalOverlay').classList.add('active');
+
+        const responsibleSelect = document.getElementById('projectResponsible');
+        responsibleSelect.innerHTML = '<option value="">Selecione o coordenador</option>';
+
+        if (coordenadores.length > 0) {
+            coordenadores.forEach(coordenador => {
+                const option = document.createElement('option');
+                option.value = coordenador.id;
+                option.textContent = coordenador.name;
+                responsibleSelect.appendChild(option);
+            });
+        }
+
+        document.getElementById('projectTitle').value = '';
+        document.getElementById('projectStatus').value = '';
+        document.getElementById('projectDescription').value = '';
+        document.getElementById('projectDeadline').value = '';
+        document.getElementById('projectBudget').value = '';
+        document.getElementById('projectClient').value = '';
+        document.getElementById('projectLocation').value = '';
+
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('projectDeadline').min = today;
+    }
+
+    function closeProjectModal() {
+        document.getElementById('projectModal').classList.remove('active');
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function addProject() {
+        const title = document.getElementById('projectTitle').value.trim();
+        const status = document.getElementById('projectStatus').value;
+        const description = document.getElementById('projectDescription').value.trim();
+        const responsible = document.getElementById('projectResponsible').value;
+        const deadline = document.getElementById('projectDeadline').value;
+        const budget = document.getElementById('projectBudget').value;
+        const client = document.getElementById('projectClient').value.trim();
+        const location = document.getElementById('projectLocation').value.trim();
+
+        if (!title || !status || !description || !responsible || !deadline) {
+            alert('Por favor, preencha todos os campos obrigatórios!');
+            return;
+        }
+
+        if (new Date(deadline) < new Date()) {
+            alert('A data de prazo não pode ser no passado!');
+            return;
+        }
+
+        const newProject = {
+            id: allProjects.length + 1,
+            codigo: 'CC' + (2400 + allProjects.length + 1),
+            titulo: title,
+            descricao: description,
+            responsavel: coordenadores.find(c => c.id == responsible).name,
+            coordenador_nome: coordenadores.find(c => c.id == responsible).name,
+            status: status,
+            data_inicio: new Date().toISOString().split('T')[0],
+            data_fim: deadline,
+            orcamento: budget ? parseFloat(budget) : 0,
+            progresso: 0,
+            cliente: client,
+            localizacao: location
+        };
+
+        allProjects.push(newProject);
+        filterUserProjects();
+
+        alert('Projeto criado com sucesso!');
+        closeProjectModal();
+        document.getElementById('lastProjectCode').textContent = newProject.codigo;
+
+        updateDashboardWithMockData();
+        updateProjectList();
+        updateMeetingProjectOptions();
+        updateProjectFilter();
+        showTab('gestao');
+    }
+
+    function openTimelineModal(projectId) {
+        document.getElementById('timelineModal').classList.add('active');
+        document.getElementById('modalOverlay').classList.add('active');
+
+        document.getElementById('timelineModal').dataset.projectId = projectId;
+
+        const projectSelect = document.getElementById('timelineProject');
+        if (currentUser.canSeeAll) {
+            projectSelect.innerHTML = '<option value="">Selecione um projeto</option>';
+            allProjects.forEach(project => {
+                const option = document.createElement('option');
+                option.value = project.id;
+                option.textContent = project.codigo;
+                if (project.id === projectId) option.selected = true;
+                projectSelect.appendChild(option);
+            });
+        } else {
+            projectSelect.innerHTML = `<option value="${projectId}">${allProjects.find(p => p.id === projectId)?.codigo}</option>`;
+            projectSelect.disabled = true;
+        }
+
+        document.getElementById('timelineMessage').value = '';
+        document.getElementById('timelineStatus').value = '';
+    }
+
+    function closeTimelineModal() {
+        document.getElementById('timelineModal').classList.remove('active');
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function addTimeline() {
+        const projectId = document.getElementById('timelineModal').dataset.projectId ||
+                         document.getElementById('timelineProject').value;
+        const message = document.getElementById('timelineMessage').value.trim();
+        const status = document.getElementById('timelineStatus').value;
+
+        if (!projectId || !message) {
+            alert('Por favor, selecione um projeto e preencha a mensagem!');
+            return;
+        }
+
+        // Verificar se o projeto ainda existe antes de adicionar timeline
+        const projectExists = allProjects.some(p => p.id == projectId);
+        if (!projectExists) {
+            alert('Este projeto não existe mais!');
+            closeTimelineModal();
+            return;
+        }
+
+        if (status === 'pausado') {
+            const projectIndex = allProjects.findIndex(p => p.id == projectId);
+            if (projectIndex !== -1) {
+                allProjects[projectIndex].status = 'pausado';
+                filterUserProjects();
+            }
+        }
+
+        const timelineContainer = document.getElementById(`timeline-${projectId}`);
+        if (timelineContainer) {
+            const newTimelineItem = `
+                <div class="timeline-item">
+                    <div class="timeline-header-info">
+                        <div class="responsible-with-avatar">
+                            ${getAvatarForUser(currentUser.name, 'small')}
+                            <span class="timeline-author">${currentUser.name}</span>
+                        </div>
+                        <span class="timeline-date">${formatDate(new Date().toISOString().split('T')[0])}</span>
+                    </div>
+                    <div class="timeline-message">${message}</div>
+                </div>
+            `;
+            timelineContainer.innerHTML = newTimelineItem + timelineContainer.innerHTML;
+        }
+
+        alert('Atualização adicionada com sucesso!');
+        closeTimelineModal();
+        updateProjectList();
+    }
+
+    function logout() {
+        currentUser = null;
+        document.getElementById('loginScreen').classList.remove('hidden');
+        document.getElementById('mainApp').classList.add('hidden');
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('pt-BR');
+    }
+
+    function closeAllModals() {
+        closeCalendar();
+        closeUpdateModal();
+        closeProjectModal();
+        closeTimelineModal();
+        closeEmailModal();
+        closeChatModal(); // Adicionado para fechar o chat também
+    }
+
+    function updateMeetingProjectOptions() {
+        const select = document.getElementById('meetingProject');
+        select.innerHTML = '<option value="">Nenhum</option>';
+
+        // Mostrar apenas projetos não cancelados
+        const activeProjects = allProjects.filter(project => project.status !== 'cancelado');
+
+        activeProjects.forEach(project => {
+            const option = document.createElement('option');
+            option.value = project.id;
+            option.textContent = project.codigo;
+            select.appendChild(option);
+        });
+    }
+
+    function updateProjectFilter() {
+        const filterSelect = document.getElementById('filterProjectUpdates');
+        filterSelect.innerHTML = '<option value="">Todos os projetos</option>';
+
+        // Mostrar apenas projetos não cancelados
+        const activeUserProjects = userProjects.filter(project => project.status !== 'cancelado');
+
+        activeUserProjects.forEach(project => {
+            const option = document.createElement('option');
+            option.value = project.id;
+            option.textContent = project.codigo;
+            filterSelect.appendChild(option);
+        });
+    }
+
+    function loadUpdates() {
+        const updatesList = document.getElementById('updatesList');
+        updatesList.innerHTML = `
+            <div class="no-annotations">
+                Use a funcionalidade de Timeline nos projetos para adicionar atualizações.
+            </div>
+        `;
+    }
+
+    function closeUpdateModal() {
+        document.getElementById('updateModal').classList.remove('active');
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function openUpdateModal() {
+        document.getElementById('updateModal').classList.add('active');
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function addUpdate() {
+        alert('Funcionalidade de atualizações será implementada em breve!');
+        closeUpdateModal();
+    }
+
+    // Event listeners para o chat
+    document.addEventListener('DOMContentLoaded', function() {
+        // Enter no chat
+        const chatInput = document.getElementById('chatInput');
+        if (chatInput) {
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Auto-resize do textarea
+            chatInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        }
+
+        // Enter no login
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+    });
+</script>
+</body>
+</html>
