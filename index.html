@@ -20,35 +20,45 @@
       .no-print { display: none !important; }
       .step-card { break-inside: avoid; }
     }
-    /* Estilo adicional para garantir que o logo tenha tamanho adequado e se adapte */
     .company-logo {
-      max-height: 48px;
+      max-height: 56px;
       width: auto;
       object-fit: contain;
       transition: all 0.2s ease;
+      border-radius: 12px;
     }
     @media (max-width: 640px) {
       .company-logo {
-        max-height: 36px;
+        max-height: 42px;
       }
     }
+    /* fallback para texto caso imagem não carregue */
+    .logo-fallback {
+      display: none;
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #a5b4fc, #818cf8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
   </style>
-  <style>body { box-sizing: border-box; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
 </head>
 <body class="h-full">
   <div id="app" class="w-full h-full overflow-auto" style="background: #0f172a;">
-    <!-- Header com logo da empresa integrada -->
+    <!-- Header com logo MDGEO (corrigido para logo-mdgeo.png) -->
     <div class="fade-up fade-up-1 text-center pt-8 pb-6 px-6 relative">
-      <!-- Container para alinhar logo e conteúdo principal -->
       <div class="max-w-3xl mx-auto">
-        <!-- Logo da empresa - posicionada acima do badge, com espaçamento e destaque -->
-        <div class="mb-5 flex justify-center">
-          <img src="img/logo-mdgeo.mdg" 
+        <!-- Logo da empresa - caminho atualizado: logo-mdgeo.png -->
+        <div class="mb-5 flex justify-center items-center">
+          <img src="logo-mdgeo.png" 
                alt="Logo MDGEO" 
                class="company-logo"
-               onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%2240%22%20viewBox%3D%220%200%20120%2040%22%3E%3Crect%20width%3D%22120%22%20height%3D%2240%22%20fill%3D%22%233b82f6%22%20rx%3D%228%22%2F%3E%3Ctext%20x%3D%2210%22%20y%3D%2226%22%20fill%3D%22white%22%20font-family%3D%22monospace%22%20font-size%3D%2216%22%3EMDGEO%3C%2Ftext%3E%3C%2Fsvg%3E'; this.style.opacity='0.9';"
-               style="border-radius: 12px; background: rgba(255,255,255,0.05); padding: 4px 8px;">
+               onerror="this.style.display='none'; document.querySelector('.logo-fallback').style.display='inline-block';">
+          <!-- Fallback elegante caso a imagem não exista -->
+          <span class="logo-fallback" style="display: none;">MDGEO</span>
         </div>
         <!-- Badge com ícone e subtítulo -->
         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase mb-5" style="background: rgba(99,102,241,0.15); color: #a5b4fc;">
